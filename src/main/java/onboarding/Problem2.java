@@ -6,10 +6,9 @@ import java.util.Stack;
 public class Problem2 {
 
     public static String solution(String cryptogram) {
-        String answer = "answer";
         Stack<Character> stack = new Stack<>();
         checkDuplicateChar(stack, cryptogram);
-        return answer;
+        return convertStackToString(stack);
     }
 
     public static void checkDuplicateChar(Stack<Character> stack, String target) {
@@ -26,6 +25,14 @@ public class Problem2 {
 
     public static boolean checkStack(Stack<Character> stack, char c) {
         return stack.empty() || stack.peek() != c;
+    }
+
+    public static String convertStackToString(Stack<Character> stack) {
+        StringBuilder result = new StringBuilder();
+        for (char c : stack) {
+            result.append(c);
+        }
+        return result.toString();
     }
 
 }
