@@ -1,8 +1,13 @@
 package onboarding;
 
+import static java.lang.Math.max;
+
 import java.util.List;
 
 class Problem1 {
+    public static final int DRAW = 0;
+    public static final int POBI_WIN = 1;
+    public static final int CRONG_WIN = 2;
     public static final int EXCEPTION = -1;
 
     public static int solution(List<Integer> pobi, List<Integer> crong) {
@@ -40,6 +45,16 @@ class Problem1 {
 
     private static boolean validatePageDifference(List<Integer> list) {
         return list.get(1) - list.get(0) != 1;
+    }
+
+    private static int calculateNumber(int page) {
+        int sum = 0, mul = 1;
+        while (page != 0) {
+            sum += page % 10;
+            mul *= page % 10;
+            page /= 10;
+        }
+        return max(sum, mul);
     }
 
 }
