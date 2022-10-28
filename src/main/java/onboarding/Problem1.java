@@ -11,11 +11,10 @@ class Problem1 {
     public static final int EXCEPTION = -1;
 
     public static int solution(List<Integer> pobi, List<Integer> crong) {
-        int answer = Integer.MAX_VALUE;
         if (checkException(pobi, crong)) {
             return EXCEPTION;
         }
-        return answer;
+        return getWinner(pobi, crong);
     }
 
     private static boolean checkException(List<Integer> pobi, List<Integer> crong) {
@@ -59,6 +58,16 @@ class Problem1 {
             page /= 10;
         }
         return max(sum, mul);
+    }
+
+    private static int getWinner(List<Integer> pobi, List<Integer> crong) {
+        if (getMaxPageNumber(pobi) > getMaxPageNumber(crong)) {
+            return POBI_WIN;
+        }
+        if (getMaxPageNumber(pobi) < getMaxPageNumber(crong)) {
+            return CRONG_WIN;
+        }
+        return DRAW;
     }
 
 }
