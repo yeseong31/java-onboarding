@@ -47,6 +47,10 @@ class Problem1 {
         return list.get(1) - list.get(0) != 1;
     }
 
+    private static int getMaxPageNumber(List<Integer> list) {
+        return max(calculateNumber(list.get(0)), calculateNumber(list.get(1)));
+    }
+
     private static int calculateNumber(int page) {
         int sum = 0, mul = 1;
         while (page != 0) {
