@@ -1,7 +1,6 @@
 package onboarding;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +10,44 @@ import java.util.regex.Pattern;
 public class Problem6 {
 
     public static List<String> solution(List<List<String>> forms) {
-        List<String> answer = List.of("answer");
+        List<String> answer = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
 
         for (List<String> form : forms) {
-            if (checkException(form)) {
-                continue;
+            if (!checkException(form)) {
+                calc(map, form);
             }
         }
+        checkDuplicateNickName(answer, map);
 
         return answer;
+    }
+
+    private static void checkDuplicateNickName(List<String> answer, Map<String, List<String>> map) {
+        for (String key : map.keySet()) {
+            if (map.get(key).size() >= 2) {
+                answer.addAll(map.get(key));
+            }
+        }
+    }
+
+    private static void calc(Map<String, List<String>> map, List<String> form) {
+        String subNickname;
+        List<String> list;
+        for (int j = 0; j < form.get(1).length() - 1; j++) {
+            subNickname = getSubNickname(form.get(1), j);
+            if (map.containsKey(subNickname)) {
+                map.get(subNickname).add(form.get(0));
+                continue;
+            }
+            list = new ArrayList<>();
+            list.add(form.get(0));
+            map.put(subNickname, list);
+        }
+    }
+
+    private static String getSubNickname(String nickname, int index) {
+        return nickname.substring(index, index + 2);
     }
 
     private static boolean checkException(List<String> form) {
