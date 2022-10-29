@@ -1,6 +1,10 @@
 package onboarding;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -10,7 +14,7 @@ public class Problem6 {
         List<String> answer = List.of("answer");
 
         for (List<String> form : forms) {
-            if (checkException(form.get(0), form.get(1))) {
+            if (checkException(form)) {
                 continue;
             }
         }
@@ -18,17 +22,17 @@ public class Problem6 {
         return answer;
     }
 
-    private static boolean checkException(String email, String nickname) {
-        if (validateEmailLength(email)) {
+    private static boolean checkException(List<String> form) {
+        if (validateEmailLength(form.get(0))) {
             return true;
         }
-        if (checkEmail(email)) {
+        if (checkEmailType(form.get(0))) {
             return true;
         }
-        if (checkNicknameLength(nickname)) {
+        if (checkNicknameLength(form.get(1))) {
             return true;
         }
-        return checkNicknameKorean(nickname);
+        return checkNicknameKorean(form.get(1));
     }
 
     private static boolean validateEmailLength(String email) {
@@ -36,7 +40,7 @@ public class Problem6 {
                 || email.length() >= 20;
     }
 
-    private static boolean checkEmail(String email) {
+    private static boolean checkEmailType(String email) {
         if (checkEmailFront(email.split("@")[0])) {
             return true;
         }
