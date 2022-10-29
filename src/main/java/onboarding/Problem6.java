@@ -1,6 +1,7 @@
 package onboarding;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ public class Problem6 {
         }
         checkDuplicateNickName(answer, map);
 
-        return answer;
+        List<String> newList = new ArrayList<>(answer);
+        newList.sort(Comparator.naturalOrder());
+        return newList;
     }
 
     private static void checkDuplicateNickName(List<String> answer, Map<String, List<String>> map) {
