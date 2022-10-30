@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Problem7 {
     static HashMap<String, HashSet<String>> graph = new HashMap<>();
@@ -14,8 +15,34 @@ public class Problem7 {
         List<String> answer = new ArrayList<>(Collections.emptyList());
 
         initFriendRelationship(friends);
+        calculatePoint(user, visitors);
 
         return answer;
+    }
+
+    private static void calculatePoint(String user, List<String> visitors) {
+        for (String visitor : visitors) {
+            if (NotFoundFriendOnPoints(visitor)) {
+                points.put(visitor, 0);
+            }
+            addPoint(visitor, 1);
+            if (isVisitorNotInGraph(visitor)) {
+                graph.put(visitor, new HashSet<>());
+            }
+            for (String target : graph.get(visitor)) {
+                if (!Objects.equals(target, user)) {
+                    addPoint(target, 10);
+                }
+            }
+        }
+    }
+
+    private static void addPoint(String name, Integer point) {
+        points.put(name, points.get(name) + point);
+    }
+
+    private static boolean isVisitorNotInGraph(String visitor) {
+        return graph.get(visitor) == null;
     }
 
     private static void initFriendRelationship(List<List<String>> friends) {
