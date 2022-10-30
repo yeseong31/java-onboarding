@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 public class Problem7 {
@@ -17,7 +18,38 @@ public class Problem7 {
         initFriendRelationship(friends);
         calculatePoint(user, visitors);
 
+        for (Entry<String, Integer> target : sortPoints()) {
+            if (notValidateTarget(user, target.getKey())) {
+                continue;
+            }
+            if (notContainUser(target.getKey(), user)) {
+                answer.add(target.getKey());
+            }
+        }
+
         return answer;
+    }
+
+    private static List<Entry<String, Integer>> sortPoints() {
+        List<Entry<String, Integer>> candidates = new ArrayList<>(points.entrySet());
+        candidates.sort((obj1, obj2) ->
+            obj2.getValue().compareTo(obj1.getValue())
+        );
+        return candidates;
+    }
+
+    private static boolean notContainUser(String key, String user) {
+        return !graph.get(key).contains(user);
+    }
+
+    private static boolean notValidateTarget(String user, String target) {
+        if (Objects.equals(target, user)) {
+            return true;
+        }
+        if (points.get(target) <= 0) {
+            return true;
+        }
+        return isVisitorNotInGraph(target);
     }
 
     private static void calculatePoint(String user, List<String> visitors) {
