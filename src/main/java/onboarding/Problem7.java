@@ -19,10 +19,10 @@ public class Problem7 {
 
         int count = 0;
         for (String target : sortPoints()) {
-            if (count >= 5) {
+            if (count >= 5 || points.get(target) == 0) {
                 break;
             }
-            if (notValidateTarget(user, target)) {
+            if (validateTarget(user, target)) {
                 continue;
             }
             answer.add(target);
@@ -43,14 +43,17 @@ public class Problem7 {
         return candidates;
     }
 
-    private static boolean notValidateTarget(String user, String target) {
-        if (Objects.equals(target, user)) {
-            return true;
+    private static boolean validateTarget(String user, String target) {
+        if (graph.get(user) != null) {
+            if (Objects.equals(target, user)) {
+                return true;
+            }
+            if (graph.get(user).contains(target)) {
+                return true;
+            }
+            return points.get(target) <= 0;
         }
-        if (graph.get(user).contains(target)) {
-            return true;
-        }
-        return points.get(target) <= 0;
+        return false;
     }
 
     private static void calculatePoint(String user, List<String> visitors) {
@@ -59,6 +62,9 @@ public class Problem7 {
                 points.put(visitor, 0);
             }
             addPoint(visitor, 1);
+        }
+        if (graph.get(user) == null) {
+            return;
         }
         for (String friend : graph.get(user)) {
             for (String name : graph.get(friend)) {
