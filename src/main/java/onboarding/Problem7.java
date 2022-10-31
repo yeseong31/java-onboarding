@@ -13,10 +13,12 @@ public class Problem7 {
 
     public static List<String> solution(String user, List<List<String>> friends, List<String> visitors) {
         List<String> answer = new ArrayList<>(Collections.emptyList());
-
         initFriendRelationship(friends);
         calculatePoint(user, visitors);
+        return makeAnswer(user, answer);
+    }
 
+    private static List<String> makeAnswer(String user, List<String> answer) {
         int count = 0;
         for (String target : sortPoints()) {
             if (count >= 5 || points.get(target) == 0) {
@@ -28,7 +30,6 @@ public class Problem7 {
             answer.add(target);
             count += 1;
         }
-
         return answer;
     }
 
