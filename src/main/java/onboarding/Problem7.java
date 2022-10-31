@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 public class Problem7 {
@@ -18,52 +17,56 @@ public class Problem7 {
         initFriendRelationship(friends);
         calculatePoint(user, visitors);
 
-        for (Entry<String, Integer> target : sortPoints()) {
-            if (notValidateTarget(user, target.getKey())) {
+        int count = 0;
+        for (String target : sortPoints()) {
+            if (count >= 5) {
+                break;
+            }
+            if (notValidateTarget(user, target)) {
                 continue;
             }
-            if (notContainUser(target.getKey(), user)) {
-                answer.add(target.getKey());
-            }
+            answer.add(target);
+            count += 1;
         }
 
         return answer;
     }
 
-    private static List<Entry<String, Integer>> sortPoints() {
-        List<Entry<String, Integer>> candidates = new ArrayList<>(points.entrySet());
-        candidates.sort((obj1, obj2) ->
-            obj2.getValue().compareTo(obj1.getValue())
-        );
+    private static List<String> sortPoints() {
+        List<String> candidates = new ArrayList<>(points.keySet());
+        candidates.sort((o1, o2) -> {
+            if (points.get(o1).equals(points.get(o2))) {
+                return o1.compareTo(o2);
+            }
+            return points.get(o2) - points.get(o1);
+        });
         return candidates;
-    }
-
-    private static boolean notContainUser(String key, String user) {
-        return !graph.get(key).contains(user);
     }
 
     private static boolean notValidateTarget(String user, String target) {
         if (Objects.equals(target, user)) {
             return true;
         }
-        if (points.get(target) <= 0) {
+        if (graph.get(user).contains(target)) {
             return true;
         }
-        return isVisitorNotInGraph(target);
+        return points.get(target) <= 0;
     }
 
     private static void calculatePoint(String user, List<String> visitors) {
         for (String visitor : visitors) {
-            if (NotFoundFriendOnPoints(visitor)) {
+            if (findFriendOnPoints(visitor)) {
                 points.put(visitor, 0);
             }
             addPoint(visitor, 1);
-            if (isVisitorNotInGraph(visitor)) {
-                graph.put(visitor, new HashSet<>());
-            }
-            for (String target : graph.get(visitor)) {
-                if (!Objects.equals(target, user)) {
-                    addPoint(target, 10);
+        }
+        for (String friend : graph.get(user)) {
+            for (String name : graph.get(friend)) {
+                if (Objects.equals(name, user)) {
+                    continue;
+                }
+                if (!graph.get(user).contains(name)) {
+                    addPoint(name, 10);
                 }
             }
         }
@@ -73,37 +76,33 @@ public class Problem7 {
         points.put(name, points.get(name) + point);
     }
 
-    private static boolean isVisitorNotInGraph(String visitor) {
-        return graph.get(visitor) == null;
-    }
-
     private static void initFriendRelationship(List<List<String>> friends) {
         for (List<String> friend : friends) {
-            if (NotFoundFriendOnPoints(friend.get(0))) {
+            if (findFriendOnPoints(friend.get(0))) {
                 points.put(friend.get(0), 0);
             }
-            if (NotFoundFriendOnPoints(friend.get(1))) {
+            if (findFriendOnPoints(friend.get(1))) {
                 points.put(friend.get(1), 0);
             }
-            if (NotFoundFriendOnGraph(friend.get(0))) {
+            if (findFriendOnGraph(friend.get(0))) {
                 graph.put(friend.get(0), new HashSet<>());
             }
-            if (NotFoundFriendOnGraph(friend.get(1))) {
+            if (findFriendOnGraph(friend.get(1))) {
                 graph.put(friend.get(1), new HashSet<>());
             }
-            InsertFriend(friend);
+            insertFriend(friend);
         }
     }
 
-    private static boolean NotFoundFriendOnPoints(String name) {
+    private static boolean findFriendOnPoints(String name) {
         return !points.containsKey(name);
     }
 
-    private static boolean NotFoundFriendOnGraph(String name) {
+    private static boolean findFriendOnGraph(String name) {
         return !graph.containsKey(name);
     }
 
-    private static void InsertFriend(List<String> friend) {
+    private static void insertFriend(List<String> friend) {
         graph.get(friend.get(0)).add(friend.get(1));
         graph.get(friend.get(1)).add(friend.get(0));
     }
