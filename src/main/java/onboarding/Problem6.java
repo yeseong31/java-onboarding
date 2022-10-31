@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Problem6 {
 
@@ -23,7 +24,11 @@ public class Problem6 {
 
         List<String> newList = new ArrayList<>(answer);
         newList.sort(Comparator.naturalOrder());
-        return newList;
+        return removeDuplicateEmail(newList);
+    }
+
+    private static List<String> removeDuplicateEmail(List<String> list) {
+        return list.stream().distinct().collect(Collectors.toList());
     }
 
     private static void checkDuplicateNickName(List<String> answer, Map<String, List<String>> map) {
